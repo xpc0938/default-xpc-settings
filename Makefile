@@ -32,6 +32,7 @@ define Build/Configure
 endef
 
 define Build/Compile
+	rm -rf ./files/xpc-default-settings
 endef
 
 define Package/default-xpc-settings/install
